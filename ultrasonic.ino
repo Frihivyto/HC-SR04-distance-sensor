@@ -2,9 +2,6 @@
 AUTOR: F.J.Maestre
 */
 
-
-#define pingPin 8
-#define piezpPin 4
 #define Pecho 6
 #define Ptrig 7
 
@@ -18,9 +15,9 @@ void setup() {
 
 void loop() {
   // Initialization of some variables
-  long duration, distance, pause;
+  long duration, distance;
 
-  // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
+  // The PING is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
   digitalWrite(Ptrig, LOW);
   delayMicroseconds(2);
@@ -28,10 +25,6 @@ void loop() {
   delayMicroseconds(10);
   digitalWrite(Ptrig, LOW);
 
-  // The same pin is used to read the signal from the PING)))
-  // A HIGH pulse whose duration is the time (in microseconds) from the sending
-  // of the ping to the reception of its echo off of an object.
-//  pinMode(pingPin, INPUT);
   duration = pulseIn(Pecho, HIGH);
 
   // convert the time into a distance
@@ -40,34 +33,22 @@ void loop() {
   //use this line to get the distance on inches
   // distance = microsecondsToInches(duration);
 
-  // Time the sensor will be sounding 
-  pause = distance * 10;
-  if (pause > 700){
-    pause = 700;
-  }
-
   if (distance >= 500 || distance <= 0){  // distance max limit 
+    distance = 500;
     Serial.println("---");                  
   }
   else {
     Serial.print(distance);          // send distance to serial port
     Serial.println("cm");            // change to inches if you need
     digitalWrite(13, 0);             // turn down the led
-
-    digitalWrite(piezpPin, HIGH);    // Active piezo sensor
-    delay(pause);                    // during pause ms
   }
   
    if (distance <= 10 && distance >= 1){
     digitalWrite(13, 1);                 // turn on the led if distance is nearer than 10 cm
-    Serial.println("Alarm....");     // send "Alarm...." to serial port
-
-//    digitalWrite(piezpPin, HIGH);       // Active piezo sensor
-//    delay(pause);                       // during pause ms
+    Serial.println("Alarm....");         // send "Alarm...." to serial port
   }
   
-//  digitalWrite(piezpPin, LOW);          //desactivate piezo sensor
-  delay(400);                           // Repetition system time
+    delay(400);                           // Repetition system time
 }
 
 long microsecondsToInches(long microseconds) {
